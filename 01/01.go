@@ -76,15 +76,6 @@ func partB() int {
 		// Handle wraparound
 		numRotations := 0
 		negative := 0
-		// if currentVal >= 100 {
-		// 	numRotations = intFloor(generics.AbsInt(currentVal) / 100)
-		// 	numRotations = max(generics.AbsInt(numRotations), 1)
-		// 	currentVal -= (100 * numRotations)
-		// } else if currentVal < 0 {
-		// 	numRotations = intFloor(generics.AbsInt(currentVal) / 100)
-		// 	numRotations = max(generics.AbsInt(numRotations), 1)
-		// 	currentVal += (100 * numRotations)
-		// }
 		if currentVal >= 100 || currentVal < 0 {
 			numRotations = intFloor(generics.AbsInt(currentVal) / 100)
 			if currentVal < 0 {
