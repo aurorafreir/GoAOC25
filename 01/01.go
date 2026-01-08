@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -40,15 +41,19 @@ func partA() int {
 	return zeroCounts
 }
 
+func intFloor(number int) int {
+	// Takes an integer, floors it, and returns an int
+	return int(math.Floor(float64(number)))
+}
+
 func partB() int {
-	// previousVal := 50
 	currentVal := 50
 	zeroCounts := 0
 
 	ex, err := os.Getwd()
 	generics.Check(err)
 
-	path := filepath.Join(ex, "input.txt")
+	path := filepath.Join(ex, "testinput.txt")
 	data, err := generics.ReadLines(path)
 	generics.Check(err)
 	for _, line := range data {
@@ -68,7 +73,27 @@ func partB() int {
 			currentVal += num
 		}
 
-		// previousVal = currentVal
+		// Handle wraparound
+		numRotations := 0
+		negative := 0
+		// if currentVal >= 100 {
+		// 	numRotations = intFloor(generics.AbsInt(currentVal) / 100)
+		// 	numRotations = max(generics.AbsInt(numRotations), 1)
+		// 	currentVal -= (100 * numRotations)
+		// } else if currentVal < 0 {
+		// 	numRotations = intFloor(generics.AbsInt(currentVal) / 100)
+		// 	numRotations = max(generics.AbsInt(numRotations), 1)
+		// 	currentVal += (100 * numRotations)
+		// }
+		if currentVal >= 100 || currentVal < 0 {
+			numRotations = intFloor(generics.AbsInt(currentVal) / 100)
+			if currentVal < 0 {
+				negative = 1
+			}
+			numRotations = max(generics.AbsInt(numRotations), 1)
+			currentVal += (100 * numRotations) * negative
+		}
+		fmt.Println(currentVal, numRotations)
 
 	}
 	return zeroCounts
