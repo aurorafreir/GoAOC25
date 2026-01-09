@@ -41,13 +41,14 @@ func partA() int {
 }
 
 func partB() int {
+	previousVal := 50
 	currentVal := 50
 	zeroCounts := 0
 
 	ex, err := os.Getwd()
 	generics.Check(err)
 
-	path := filepath.Join(ex, "testinput.txt")
+	path := filepath.Join(ex, "input.txt")
 	data, err := generics.ReadLines(path)
 	generics.Check(err)
 	for _, line := range data {
@@ -67,6 +68,24 @@ func partB() int {
 			currentVal += num
 		}
 
+		// fmt.Println(direction, num, "prev:", previousVal, "current:", currentVal)
+
+		// Avoids double hits when the previous answer was 0
+		previousValTemp := previousVal
+		if previousVal == 0 && currentVal < 0 {
+			previousValTemp = -1
+		} else if previousVal == 0 && currentVal > 0 {
+			previousValTemp = 1
+		}
+
+		// Loops through all ints between previousVal and currentVal to see how many zero hits there are
+		for i := min(currentVal, previousValTemp); i <= max(currentVal, previousValTemp); i++ {
+			if i%100 == 0 {
+				// fmt.Println("hits zero at", i)
+				zeroCounts += 1
+			}
+		}
+
 		// Handle wraparound
 		numRotations := 0 // Number of times that the currentVal is wrapped past 100
 		polarity := 1     // 1 if $currentVal is positive, -1 is $currentVal is negative
@@ -82,7 +101,8 @@ func partB() int {
 			// Subtracts 100 * the number of rotations * the polarity (negative/positive)
 			currentVal -= (100 * numRotations) * polarity
 		}
-		fmt.Println(currentVal, numRotations)
+
+		previousVal = currentVal
 
 	}
 	return zeroCounts
