@@ -9,6 +9,14 @@ import (
 	"example.com/utils"
 )
 
+func directionAndIncrememt(line string) (string, int) {
+	direction := line[0:1]
+	num := line[1:]
+	intconv, err := strconv.Atoi(num)
+	utils.Check(err)
+	return direction, intconv
+}
+
 func partA() int {
 	currentVal := 50
 	zeroCounts := 0
@@ -20,16 +28,13 @@ func partA() int {
 	data, err := utils.ReadLines(path)
 	utils.Check(err)
 	for _, line := range data {
-		direction := line[0:1]
-		num := line[1:]
-		intconv, err := strconv.Atoi(num)
-		utils.Check(err)
+		direction, increment := directionAndIncrememt(line)
 
 		switch direction {
 		case "L":
-			currentVal -= intconv
+			currentVal -= increment
 		case "R":
-			currentVal += intconv
+			currentVal += increment
 		}
 
 		if currentVal%100 == 0 {
@@ -55,16 +60,13 @@ func partB() int {
 
 		// Split the line (e.g. "L68") into $direction ("L") and $strnum ("68"),
 		// then converts $num to an integer
-		direction := line[0:1]
-		strnum := line[1:]
-		num, err := strconv.Atoi(strnum)
-		utils.Check(err)
+		direction, increment := directionAndIncrememt(line)
 
 		switch direction {
 		case "L":
-			currentVal -= num
+			currentVal -= increment
 		case "R":
-			currentVal += num
+			currentVal += increment
 		}
 
 		// fmt.Println(direction, num, "prev:", previousVal, "current:", currentVal)
