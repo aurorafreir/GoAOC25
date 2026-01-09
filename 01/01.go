@@ -60,7 +60,6 @@ func partB() int {
 		num, err := strconv.Atoi(strnum)
 		utils.Check(err)
 
-		// Add or subtract the new number from $currentVal
 		switch direction {
 		case "L":
 			currentVal -= num
