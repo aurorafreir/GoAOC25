@@ -78,7 +78,7 @@ func partB() int {
 		polarity := 1     // 1 if $currentVal is positive, -1 is $currentVal is negative
 		if currentVal >= 100 || currentVal < 0 {
 			// Gets the specific number of times that currentVal is wrapped past 100
-			numRotations = intFloor(generics.AbsInt(currentVal) / 100)
+			numRotations = generics.AbsInt(currentVal) / 100
 			// Gets the Absolute Int number of rotations
 			numRotations = max(generics.AbsInt(numRotations), 1)
 			// Sets $negative to -1 if the $currentVal is below zero

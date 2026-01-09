@@ -3,6 +3,7 @@ package generics
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 )
 
@@ -44,4 +45,9 @@ func ReadLines(path string) ([]string, error) {
 		lines = append(lines, scanner.Text())
 	}
 	return lines, scanner.Err()
+}
+
+func IntFloor(number int) int {
+	// Takes an integer, floors it, and returns an int
+	return int(math.Floor(float64(number)))
 }
