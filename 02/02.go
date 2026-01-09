@@ -7,17 +7,17 @@ import (
 	"strconv"
 	"strings"
 
-	"example.com/generics"
+	"example.com/utils"
 )
 
 func partA() int {
 	// Basic file importing
 	ex, err := os.Getwd()
-	generics.Check(err)
+	utils.Check(err)
 
 	path := filepath.Join(ex, "testinput.txt")
-	data, err := generics.ReadLines(path)
-	generics.Check(err)
+	data, err := utils.ReadLines(path)
+	utils.Check(err)
 
 	// Get just the first line as a string
 	singleString := data[0]
@@ -32,9 +32,9 @@ func partA() int {
 
 		// Convert Start and End strings into ints
 		startRangeInt, err := strconv.Atoi(startRange)
-		generics.Check(err)
+		utils.Check(err)
 		endRangeInt, err := strconv.Atoi(endRange)
-		generics.Check(err)
+		utils.Check(err)
 
 		fmt.Println("start:", startRangeInt, "end:", endRangeInt)
 		for i := startRangeInt; i <= endRangeInt; i++ {

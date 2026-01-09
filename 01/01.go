@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"example.com/generics"
+	"example.com/utils"
 )
 
 func partA() int {
@@ -14,16 +14,16 @@ func partA() int {
 	zeroCounts := 0
 
 	ex, err := os.Getwd()
-	generics.Check(err)
+	utils.Check(err)
 
 	path := filepath.Join(ex, "input.txt")
-	data, err := generics.ReadLines(path)
-	generics.Check(err)
+	data, err := utils.ReadLines(path)
+	utils.Check(err)
 	for _, line := range data {
 		direction := line[0:1]
 		num := line[1:]
 		intconv, err := strconv.Atoi(num)
-		generics.Check(err)
+		utils.Check(err)
 
 		switch direction {
 		case "L":
@@ -46,11 +46,11 @@ func partB() int {
 	zeroCounts := 0
 
 	ex, err := os.Getwd()
-	generics.Check(err)
+	utils.Check(err)
 
 	path := filepath.Join(ex, "input.txt")
-	data, err := generics.ReadLines(path)
-	generics.Check(err)
+	data, err := utils.ReadLines(path)
+	utils.Check(err)
 	for _, line := range data {
 
 		// Split the line (e.g. "L68") into $direction ("L") and $strnum ("68"),
@@ -58,7 +58,7 @@ func partB() int {
 		direction := line[0:1]
 		strnum := line[1:]
 		num, err := strconv.Atoi(strnum)
-		generics.Check(err)
+		utils.Check(err)
 
 		// Add or subtract the new number from $currentVal
 		switch direction {
@@ -91,9 +91,9 @@ func partB() int {
 		polarity := 1     // 1 if $currentVal is positive, -1 is $currentVal is negative
 		if currentVal >= 100 || currentVal < 0 {
 			// Gets the specific number of times that currentVal is wrapped past 100
-			numRotations = generics.AbsInt(currentVal) / 100
+			numRotations = utils.AbsInt(currentVal) / 100
 			// Gets the Absolute Int number of rotations
-			numRotations = max(generics.AbsInt(numRotations), 1)
+			numRotations = max(utils.AbsInt(numRotations), 1)
 			// Sets $negative to -1 if the $currentVal is below zero
 			if currentVal < 0 {
 				polarity = -1
