@@ -9,7 +9,7 @@ import (
 	"example.com/utils"
 )
 
-func directionAndIncrememt(line string) (string, int) {
+func directionAndIncrement(line string) (string, int) {
 	direction := line[0:1]
 	num := line[1:]
 	intconv, err := strconv.Atoi(num)
@@ -28,7 +28,7 @@ func partA() int {
 	data, err := utils.ReadLines(path)
 	utils.Check(err)
 	for _, line := range data {
-		direction, increment := directionAndIncrememt(line)
+		direction, increment := directionAndIncrement(line)
 
 		switch direction {
 		case "L":
@@ -60,7 +60,7 @@ func partB() int {
 
 		// Split the line (e.g. "L68") into $direction ("L") and $strnum ("68"),
 		// then converts $num to an integer
-		direction, increment := directionAndIncrememt(line)
+		direction, increment := directionAndIncrement(line)
 
 		switch direction {
 		case "L":
