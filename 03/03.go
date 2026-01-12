@@ -47,10 +47,7 @@ func partA() int {
 		maxInt := 0
 		// Loop through each possible forward-only iteration of the input line
 		for x := 0; x <= lenOfNum; x++ {
-			for y := x; y < lenOfNum; y++ {
-				if y == x {
-					continue
-				}
+			for y := x + 1; y < lenOfNum; y++ {
 				// Concatenate item $X and item $Y as a string
 				var b bytes.Buffer
 				b.WriteString(line[x : x+1])
