@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"time"
 
 	"example.com/utils"
 )
@@ -71,11 +72,71 @@ func partA() int {
 	return joltage
 }
 
-func partB() int {
-	return 0
+func combineAndReturnIntFromStr(line string, startInt int) (int, error) {
+	var byteStr bytes.Buffer
+	byteStr.WriteString(line[startInt : startInt+12])
+	// Convert to integer
+	asInt, err := strconv.Atoi(byteStr.String())
+	fmt.Println(asInt)
+	return asInt, err
+}
+
+func partB() (int, error) {
+	// unworking currently
+
+	var maxInts []int
+	joltage := 0 // i like this word
+
+	// Basic file importing
+	ex, err := os.Getwd()
+	utils.Check(err)
+
+	path := filepath.Join(ex, "testinput.txt")
+	data, err := utils.ReadLines(path)
+	utils.Check(err)
+
+	for lineNum, line := range data {
+		timeStart := time.Now()
+		lenOfNum := len(line)
+		maxInt := 0
+		fmt.Println(lineNum+1, "out of:", len(data))
+		// Get clean direct forward 12 length long numbers
+		for a := 0; a <= lenOfNum-12; a++ {
+			asInt, err := combineAndReturnIntFromStr(line, a)
+			utils.Check(err)
+			// Replace $maxInt if $asInt is higher
+			if asInt > maxInt {
+				maxInt = asInt
+			}
+		}
+
+		maxInts = append(maxInts, maxInt)
+		fmt.Println(time.Since(timeStart))
+	}
+	// Addition of each int in $maxInts
+	for _, int := range maxInts {
+		joltage += int
+	}
+
+	return joltage, nil
 }
 
 func main() {
-	fmt.Println("Result A:", partA())
-	fmt.Println("Result B:", partB())
+	// fmt.Println("Result A:", partA())
+
+	// funcTimeStart := time.Now()
+	// pB, err := partB()
+	// utils.Check(err)
+	// fmt.Println("Result B:", pB)
+	// fmt.Println("Function took:", time.Since(funcTimeStart))
+
+	// lenOfOutputNums := 6
+	items := []string{"120240332040", "120240332040"}
+	for index, item := range items {
+		fmt.Println(index, item)
+		// highestNumStr := "000000000000"
+		for i := 0; i < len(item); i++ {
+			fmt.Println(item[i : i+1])
+		}
+	}
 }
