@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 
 	"example.com/utils"
@@ -72,13 +73,28 @@ func partA() int {
 	return joltage
 }
 
-func combineAndReturnIntFromStr(line string, startInt int) (int, error) {
-	var byteStr bytes.Buffer
-	byteStr.WriteString(line[startInt : startInt+12])
-	// Convert to integer
-	asInt, err := strconv.Atoi(byteStr.String())
-	fmt.Println(asInt)
-	return asInt, err
+func findHighestNumInSlicedStr(inputStr string, startIntIncl int, endIntExcl int) (int, int, error) {
+	highestInt := 0
+	highestIntIndex := startIntIncl
+
+	// Loop through the $inputStr from $startIntIncl to $endIntExcl, convert to an int, and error check
+	for index := startIntIncl; index <= endIntExcl; index++ {
+		indexItemStr := inputStr[index : index+1]
+		intItem, err := strconv.Atoi(indexItemStr)
+		utils.Check(err)
+
+		// No point in checking further if item is 9, return next index
+		if intItem == 9 {
+			return intItem, index + 1, nil
+		}
+		// Find highest item and the next index
+		if intItem > highestInt {
+			highestInt = intItem
+			highestIntIndex = index + 1
+		}
+	}
+
+	return highestInt, highestIntIndex, nil
 }
 
 func partB() (int, error) {
@@ -91,28 +107,33 @@ func partB() (int, error) {
 	ex, err := os.Getwd()
 	utils.Check(err)
 
-	path := filepath.Join(ex, "testinput.txt")
+	path := filepath.Join(ex, "input.txt")
 	data, err := utils.ReadLines(path)
 	utils.Check(err)
 
-	for lineNum, line := range data {
-		timeStart := time.Now()
+	for _, line := range data {
+
 		lenOfNum := len(line)
 		maxInt := 0
-		fmt.Println(lineNum+1, "out of:", len(data))
-		// Get clean direct forward 12 length long numbers
-		for a := 0; a <= lenOfNum-12; a++ {
-			asInt, err := combineAndReturnIntFromStr(line, a)
+		// Sliding window code
+		endIntLen := 12
+		startRange := 0
+		endRange := lenOfNum - endIntLen
+		endStrSlice := []string{}
+		endStr := ""
+		for range endIntLen {
+			highestInt, highestIntIndex, err := findHighestNumInSlicedStr(line, startRange, endRange)
 			utils.Check(err)
-			// Replace $maxInt if $asInt is higher
-			if asInt > maxInt {
-				maxInt = asInt
-			}
+			startRange = highestIntIndex
+			endRange = lenOfNum - (endIntLen - len(endStrSlice)) + 1 // Moves $endRange forward
+			endStrSlice = append(endStrSlice, strconv.Itoa(highestInt))
+			endStr = strings.Join(endStrSlice, "")
 		}
+		maxInt, err = strconv.Atoi(endStr)
 
 		maxInts = append(maxInts, maxInt)
-		fmt.Println(time.Since(timeStart))
 	}
+
 	// Addition of each int in $maxInts
 	for _, int := range maxInts {
 		joltage += int
@@ -124,19 +145,14 @@ func partB() (int, error) {
 func main() {
 	// fmt.Println("Result A:", partA())
 
-	// funcTimeStart := time.Now()
-	// pB, err := partB()
-	// utils.Check(err)
-	// fmt.Println("Result B:", pB)
-	// fmt.Println("Function took:", time.Since(funcTimeStart))
+	funcTimeStartA := time.Now()
+	pA := partA()
+	fmt.Println("Result A:", pA)
+	fmt.Println("Function A took:", time.Since(funcTimeStartA))
 
-	// lenOfOutputNums := 6
-	items := []string{"120240332040", "120240332040"}
-	for index, item := range items {
-		fmt.Println(index, item)
-		// highestNumStr := "000000000000"
-		for i := 0; i < len(item); i++ {
-			fmt.Println(item[i : i+1])
-		}
-	}
+	funcTimeStartB := time.Now()
+	pB, err := partB()
+	utils.Check(err)
+	fmt.Println("Result B:", pB)
+	fmt.Println("Function B took:", time.Since(funcTimeStartB))
 }
