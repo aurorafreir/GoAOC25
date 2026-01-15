@@ -1,12 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
-	"time"
 
 	"example.com/utils"
 )
@@ -63,14 +61,14 @@ func findForwardHighestInt(inputData []string, resultIntLength int) []int {
 	return maxInts
 }
 
-func day3Handler(maxIntLength int) (int, error) {
+func d3(maxIntLength int) (int, error) {
 	joltage := 0 // i like this word
 
 	// Basic file importing
 	ex, err := os.Getwd()
 	utils.Check(err)
 
-	path := filepath.Join(ex, "input.txt")
+	path := filepath.Join(ex, "input", "03.txt")
 	data, err := utils.ReadLines(path)
 	utils.Check(err)
 
@@ -84,16 +82,16 @@ func day3Handler(maxIntLength int) (int, error) {
 	return joltage, nil
 }
 
-func main() {
-	funcTimeStartA := time.Now()
-	pA, err := day3Handler(2)
-	utils.Check(err)
-	fmt.Println("D3p1 result:", pA)
-	fmt.Println("D3p1 took:", time.Since(funcTimeStartA).Microseconds(), "microseconds")
+// func main() {
+// 	funcTimeStartA := time.Now()
+// 	pA, err := day3Handler(2)
+// 	utils.Check(err)
+// 	fmt.Println("D3p1 result:", pA)
+// 	fmt.Println("D3p1 took:", time.Since(funcTimeStartA).Microseconds(), "microseconds")
 
-	funcTimeStartB := time.Now()
-	pB, err := day3Handler(12)
-	utils.Check(err)
-	fmt.Println("D3p2 result:", pB)
-	fmt.Println("D3p2 took:", time.Since(funcTimeStartB).Microseconds(), "microseconds")
-}
+// 	funcTimeStartB := time.Now()
+// 	pB, err := day3Handler(12)
+// 	utils.Check(err)
+// 	fmt.Println("D3p2 result:", pB)
+// 	fmt.Println("D3p2 took:", time.Since(funcTimeStartB).Microseconds(), "microseconds")
+// }

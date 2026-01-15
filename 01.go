@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -16,14 +15,14 @@ func directionAndIncrement(line string) (string, int, error) {
 	return direction, intconv, err
 }
 
-func partA() int {
+func d1p1() int {
 	currentVal := 50
 	zeroCounts := 0
 
 	ex, err := os.Getwd()
 	utils.Check(err)
 
-	path := filepath.Join(ex, "input.txt")
+	path := filepath.Join(ex, "input", "01.txt")
 	data, err := utils.ReadLines(path)
 	utils.Check(err)
 	for _, line := range data {
@@ -45,7 +44,7 @@ func partA() int {
 	return zeroCounts
 }
 
-func partB() int {
+func d1p2() int {
 	previousVal := 50
 	currentVal := 50
 	zeroCounts := 0
@@ -53,7 +52,7 @@ func partB() int {
 	ex, err := os.Getwd()
 	utils.Check(err)
 
-	path := filepath.Join(ex, "input.txt")
+	path := filepath.Join(ex, "input", "01.txt")
 	data, err := utils.ReadLines(path)
 	utils.Check(err)
 	for _, line := range data {
@@ -110,7 +109,7 @@ func partB() int {
 	return zeroCounts
 }
 
-func main() {
-	fmt.Println("Result A:", partA())
-	fmt.Println("Result B:", partB())
-}
+// func main() {
+// 	fmt.Println("Result A:", d1p1())
+// 	fmt.Println("Result B:", d1p2())
+// }
