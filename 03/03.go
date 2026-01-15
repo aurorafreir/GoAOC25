@@ -98,8 +98,6 @@ func findHighestNumInSlicedStr(inputStr string, startIntIncl int, endIntExcl int
 }
 
 func partB() (int, error) {
-	// unworking currently
-
 	var maxInts []int
 	joltage := 0 // i like this word
 
