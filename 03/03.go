@@ -88,12 +88,12 @@ func main() {
 	funcTimeStartA := time.Now()
 	pA, err := day3Handler(2)
 	utils.Check(err)
-	fmt.Println("Result A:", pA)
-	fmt.Println("Function A took:", time.Since(funcTimeStartA).Microseconds(), "microseconds")
+	fmt.Println("D3p1 result:", pA)
+	fmt.Println("D3p1 took:", time.Since(funcTimeStartA).Microseconds(), "microseconds")
 
 	funcTimeStartB := time.Now()
 	pB, err := day3Handler(12)
 	utils.Check(err)
-	fmt.Println("Result B:", pB)
-	fmt.Println("Function B took:", time.Since(funcTimeStartB).Microseconds(), "microseconds")
+	fmt.Println("D3p2 result:", pB)
+	fmt.Println("D3p2 took:", time.Since(funcTimeStartB).Microseconds(), "microseconds")
 }
