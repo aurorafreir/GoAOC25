@@ -1,8 +1,6 @@
 package main
 
 import (
-	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -64,12 +62,7 @@ func findForwardHighestInt(inputData []string, resultIntLength int) []int {
 func d3(maxIntLength int) (int, error) {
 	joltage := 0 // i like this word
 
-	// Basic file importing
-	ex, err := os.Getwd()
-	utils.Check(err)
-
-	path := filepath.Join(ex, "input", "03.txt")
-	data, err := utils.ReadLines(path)
+	data, err := utils.AOCFileReadToSlice(false, 3)
 	utils.Check(err)
 
 	maxInts := findForwardHighestInt(data, maxIntLength)

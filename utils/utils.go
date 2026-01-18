@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -46,6 +47,30 @@ func ReadLines(path string) ([]string, error) {
 		lines = append(lines, scanner.Text())
 	}
 	return lines, scanner.Err()
+}
+
+func AOCFileReadToSlice(test bool, day int) (output []string, err error) {
+	// Basic file importing
+	ex, err := os.Getwd()
+	if err != nil {
+		return nil, err
+	}
+
+	folder := "input"
+
+	if test {
+		folder = "testinput"
+	}
+
+	dayStr := fmt.Sprintf("%02d", day)
+
+	path := filepath.Join(ex, folder, dayStr+".txt")
+	data, err := ReadLines(path)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }
 
 func IntFloor(number int) int {

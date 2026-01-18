@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
 	"reflect"
 
 	"example.com/utils"
@@ -21,12 +19,7 @@ func countCharacters(inputStr string, charToFind string) int {
 }
 
 func d4p1() (int, error) {
-	// Basic file importing
-	ex, err := os.Getwd()
-	utils.Check(err)
-
-	path := filepath.Join(ex, "input", "04.txt")
-	data, err := utils.ReadLines(path)
+	data, err := utils.AOCFileReadToSlice(false, 4)
 	utils.Check(err)
 
 	maxAccessibleRolls := 0
@@ -72,12 +65,7 @@ func boxFilterEachItemAndReturnNewSlice(currentSlice []string) (outputSlice []st
 }
 
 func d4p2() (int, error) {
-	// Basic file importing
-	ex, err := os.Getwd()
-	utils.Check(err)
-
-	path := filepath.Join(ex, "input", "04.txt")
-	data, err := utils.ReadLines(path)
+	data, err := utils.AOCFileReadToSlice(false, 4)
 	utils.Check(err)
 
 	maxAccessibleRolls := 0

@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
 	"slices"
 	"strconv"
 	"strings"
@@ -16,13 +14,8 @@ func lenItoa(i int) int {
 	return len(strconv.Itoa(i))
 }
 
-func d2p1() int {
-	// Basic file importing
-	ex, err := os.Getwd()
-	utils.Check(err)
-
-	path := filepath.Join(ex, "testinput.txt")
-	data, err := utils.ReadLines(path)
+func d2p1() (output int, err error) {
+	data, err := utils.AOCFileReadToSlice(true, 2)
 	utils.Check(err)
 
 	// Get just the first line as a string
@@ -79,11 +72,11 @@ func d2p1() int {
 			// fmt.Println(len(regexComp.FindAllString(strconv.Itoa(i), -1)))
 		}
 	}
-	return 0
+	return 0, nil
 }
 
-func d2p2() int {
-	return 0
+func d2p2() (output int, err error) {
+	return 0, nil
 }
 
 // func main() {

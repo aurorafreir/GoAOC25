@@ -1,8 +1,6 @@
 package main
 
 import (
-	"os"
-	"path/filepath"
 	"strconv"
 
 	"example.com/utils"
@@ -19,12 +17,9 @@ func d1p1() int {
 	currentVal := 50
 	zeroCounts := 0
 
-	ex, err := os.Getwd()
+	data, err := utils.AOCFileReadToSlice(false, 1)
 	utils.Check(err)
 
-	path := filepath.Join(ex, "input", "01.txt")
-	data, err := utils.ReadLines(path)
-	utils.Check(err)
 	for _, line := range data {
 		direction, increment, err := directionAndIncrement(line)
 		utils.Check(err)
@@ -49,12 +44,9 @@ func d1p2() int {
 	currentVal := 50
 	zeroCounts := 0
 
-	ex, err := os.Getwd()
+	data, err := utils.AOCFileReadToSlice(false, 1)
 	utils.Check(err)
 
-	path := filepath.Join(ex, "input", "01.txt")
-	data, err := utils.ReadLines(path)
-	utils.Check(err)
 	for _, line := range data {
 
 		// Split the line (e.g. "L68") into $direction ("L") and $strnum ("68"),
