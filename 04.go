@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -10,6 +9,7 @@ import (
 )
 
 func countCharacters(inputStr string, charToFind string) int {
+	// Counts the number of matching characters in a string, should probably switch to a regex function
 	charCount := 0
 	for _, i := range inputStr {
 		if string(i) == charToFind {
@@ -20,19 +20,20 @@ func countCharacters(inputStr string, charToFind string) int {
 }
 
 func flattenSlice(inputSlice []string) (outputString string) {
-	//
+	// Flattens a slice into a single string
 	outputString = strings.Join(inputSlice, "")
 
 	return outputString
 }
 
-func boxFilter(inputSlice []string, xRadius int, yRadius int, x int, y int, flatten bool) []string {
-	//
+func boxFilter(inputSlice []string, xRadius int, yRadius int, x int, y int) []string {
+	// Safe box filter given an input slice of Y (slice, vertical) and X (string, horizontal)
+	// $xRadius for string search radius, $yRadius for slice search radius
+	// Returns a slice with the box filter's search radius
 	var outputSlice []string
-	yMin, yMax := max(x-xRadius, 0), min(x+xRadius+1, len(inputSlice))
+	yMin, yMax := max(y-yRadius, 0), min(y+yRadius+1, len(inputSlice))
 	for _, Y := range inputSlice[yMin:yMax] {
-		xMin, xMax := max(y-yRadius, 0), min(y+yRadius+1, len(Y))
-		// fmt.Println(Y[xMin:xMax])
+		xMin, xMax := max(x-xRadius, 0), min(x+xRadius+1, len(Y))
 		outputSlice = append(outputSlice, Y[xMin:xMax])
 	}
 
@@ -50,14 +51,13 @@ func d4p1() (int, error) {
 
 	maxAccessibleRolls := 0
 
+	// loop through the Y and X ranges, check if each item is an @,
+	// then run a box filter on each item, and check the @ count in surrounding items
 	for indexY, itemY := range data {
-		// fmt.Println(indexY, item)
 		for indexX, itemX := range itemY {
 			if string(itemX) == "@" {
-				outputString := flattenSlice(boxFilter(data, 1, 1, indexX, indexY, true))
-				fmt.Println(indexY, indexX, outputString)
+				outputString := flattenSlice(boxFilter(data, 1, 1, indexX, indexY))
 				if (countCharacters(outputString, "@") - 1) < 4 {
-					fmt.Println(countCharacters(outputString, "@"))
 					maxAccessibleRolls++
 				}
 			}
