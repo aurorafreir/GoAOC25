@@ -49,5 +49,5 @@ func main() {
 	fmt.Println("D4p2 result:", d4p2)
 	fmt.Println("D4p2 took:", time.Since(funcTimeStart).Microseconds(), "microseconds")
 
-	fmt.Println("All completed AOC 2025 challenges finished in", time.Since(mainTimeStart).Microseconds(), "microseconds")
+	fmt.Println("All completed AOC 2025 challenges finished in", time.Since(mainTimeStart).Microseconds(), "microseconds /", time.Since(mainTimeStart).Seconds(), "seconds")
 }
