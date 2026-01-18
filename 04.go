@@ -1,9 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
+	"reflect"
 
 	"example.com/utils"
 )
@@ -17,27 +18,6 @@ func countCharacters(inputStr string, charToFind string) int {
 		}
 	}
 	return charCount
-}
-
-func flattenSlice(inputSlice []string) (outputString string) {
-	// Flattens a slice into a single string
-	outputString = strings.Join(inputSlice, "")
-
-	return outputString
-}
-
-func boxFilter(inputSlice []string, xRadius int, yRadius int, x int, y int) []string {
-	// Safe box filter given an input slice of Y (slice, vertical) and X (string, horizontal)
-	// $xRadius for string search radius, $yRadius for slice search radius
-	// Returns a slice with the box filter's search radius
-	var outputSlice []string
-	yMin, yMax := max(y-yRadius, 0), min(y+yRadius+1, len(inputSlice))
-	for _, Y := range inputSlice[yMin:yMax] {
-		xMin, xMax := max(x-xRadius, 0), min(x+xRadius+1, len(Y))
-		outputSlice = append(outputSlice, Y[xMin:xMax])
-	}
-
-	return outputSlice
 }
 
 func d4p1() (int, error) {
@@ -56,7 +36,7 @@ func d4p1() (int, error) {
 	for indexY, itemY := range data {
 		for indexX, itemX := range itemY {
 			if string(itemX) == "@" {
-				outputString := flattenSlice(boxFilter(data, 1, 1, indexX, indexY))
+				outputString := utils.FlattenSlice(utils.BoxFilter(data, 1, 1, indexX, indexY))
 				if (countCharacters(outputString, "@") - 1) < 4 {
 					maxAccessibleRolls++
 				}
@@ -67,6 +47,52 @@ func d4p1() (int, error) {
 	return maxAccessibleRolls, nil
 }
 
+func boxFilterEachItemAndReturnNewSlice(currentSlice []string) (outputSlice []string, modificationsMade int, err error) {
+	// loop through the Y and X ranges, check if each item is an @,
+	// then run a box filter on each item, and check the @ count in surrounding items
+	// Then replaces the @ with a . if it has less than 4 @s in surrounding box filter
+	for indexY, itemY := range currentSlice {
+		newString := ""
+		for indexX, itemX := range itemY {
+			if string(itemX) == "@" {
+				outputString := utils.FlattenSlice(utils.BoxFilter(currentSlice, 1, 1, indexX, indexY))
+				if (countCharacters(outputString, "@") - 1) < 4 {
+					modificationsMade++
+					newString = newString + "."
+				} else {
+					newString = newString + "@"
+				}
+			} else {
+				newString = newString + "."
+			}
+		}
+		outputSlice = append(outputSlice, newString)
+	}
+	return outputSlice, modificationsMade, nil
+}
+
 func d4p2() (int, error) {
-	return 0, nil
+	// Basic file importing
+	ex, err := os.Getwd()
+	utils.Check(err)
+
+	path := filepath.Join(ex, "input", "04.txt")
+	data, err := utils.ReadLines(path)
+	utils.Check(err)
+
+	maxAccessibleRolls := 0
+	previousSlice := data
+
+	for range 100 { // Max recursion depth
+		newSlice, modificationsMade, _ := boxFilterEachItemAndReturnNewSlice(previousSlice)
+		maxAccessibleRolls = maxAccessibleRolls + modificationsMade
+		if reflect.DeepEqual(previousSlice, newSlice) { // Clear loop and return if previousSlice and newSlice are the same
+			return maxAccessibleRolls, nil
+		} else {
+			previousSlice = newSlice
+		}
+	}
+	fmt.Println("hit set max recursion depth, up recursion depth :)")
+
+	return maxAccessibleRolls, nil
 }
