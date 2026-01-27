@@ -66,12 +66,16 @@ func d5p2() (int, error) {
 	// [x] Loop through sorted slice to grab k,v from map and export a sorted input/output slice
 	// [x] loop through sorted slice, and given it's output range, see if the next input range is
 	// 			lower than the current output range, if it is, append [$current[input], $next[ouxtput]]
-	// [ ] Recursively run over sorted slices to weed out overlapping items
+	// [ ] For each item in the sorted ranges, find out if the output range is bigger than the next input range.
+	// 			If it isn't then output it as is. If it is bigger than the next input range then loop through the
+	// 			future inOutRanges and find the next one that is bigger than the current outRange, then append
+	// 			the current inputRange and the previous future outputRange, then skip to the next inputRange
 
 	count := 0
 	var inRanges []int
 	inOutRangesMap := make(map[int]int)
 	sortedRanges := [][]int{}
+	cleanRanges := [][]int{}
 
 	ranges, _ := returnRangesAndIDs(data, true)
 
@@ -91,18 +95,34 @@ func d5p2() (int, error) {
 	}
 
 	fmt.Println(inOutRangesMap)
-	fmt.Println(inRanges)
-	fmt.Println(sortedRanges)
+	fmt.Println("only input ranges:", inRanges)
+	fmt.Println("sorted range slice:", sortedRanges)
 
-	// rangesToMap := make[]
+	currentPos := 0
+	for range len(sortedRanges) {
+		if currentPos >= len(sortedRanges)-1 {
+			return count, nil
+		}
+		fmt.Println(currentPos, sortedRanges[currentPos])
+		fmt.Println(cleanRanges)
 
-	// for index, startEndRange := range ranges[:len(ranges)-1] {
-	// 	if startEndRange[1] >= ranges[index+1][0] {
-	// 		fmt.Println(startEndRange, ranges[index+1][0])
-	// 	}
-	// }
+		if sortedRanges[currentPos][1] < sortedRanges[currentPos+1][0] { // If clean item, just output
+			cleanRanges = append(cleanRanges, sortedRanges[currentPos])
+		}
+		// else { // If not a clean item, find the next item that has a higher input range than the current output range
+		// 	for i := currentPos + 1; i < len(sortedRanges); i++ {
+		// 		if sortedRanges[currentPos][1] < sortedRanges[i][0] {
+		// 			newItem := []int{sortedRanges[currentPos][0], sortedRanges[i-1][1]}
+		// 			cleanRanges = append(cleanRanges, newItem)
+		// 			currentPos = i
+		// 		}
+		// 	}
+		// }
 
-	// fmt.Println(ranges, cleanRanges)
+		currentPos++
+	}
+
+	fmt.Println(cleanRanges)
 
 	return count, nil
 }
