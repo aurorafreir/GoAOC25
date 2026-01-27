@@ -71,7 +71,7 @@ func d5p2() (int, error) {
 	// 			future inOutRanges and find the next one that is bigger than the current outRange, then append
 	// 			the current inputRange and the previous future outputRange, then skip to the next inputRange
 
-	count := 0
+	// count := 0
 	var inRanges []int
 	inOutRangesMap := make(map[int]int)
 	sortedRanges := [][]int{}
@@ -99,30 +99,44 @@ func d5p2() (int, error) {
 	fmt.Println("sorted range slice:", sortedRanges)
 
 	currentPos := 0
-	for range len(sortedRanges) {
-		if currentPos >= len(sortedRanges)-1 {
-			return count, nil
+	lenOfSortedRange := len(sortedRanges)
+	for range lenOfSortedRange {
+		// Exit loop cleanly
+		if currentPos >= lenOfSortedRange-1 {
+			return 0, nil
 		}
-		fmt.Println(currentPos, sortedRanges[currentPos])
-		fmt.Println(cleanRanges)
 
-		if sortedRanges[currentPos][1] < sortedRanges[currentPos+1][0] { // If clean item, just output
-			cleanRanges = append(cleanRanges, sortedRanges[currentPos])
+		fmt.Println(sortedRanges[currentPos])
+
+		// Clean output for current item, no overlapping ranges, append with no changes
+		if sortedRanges[currentPos][1] < sortedRanges[currentPos+1][0] {
+			fmt.Println("clean output, no overlaps:", sortedRanges[currentPos])
+			cleanRanges = append(cleanRanges, []int{sortedRanges[currentPos][0], sortedRanges[currentPos][1]})
+			currentPos++
+			continue
 		}
-		// else { // If not a clean item, find the next item that has a higher input range than the current output range
-		// 	for i := currentPos + 1; i < len(sortedRanges); i++ {
-		// 		if sortedRanges[currentPos][1] < sortedRanges[i][0] {
-		// 			newItem := []int{sortedRanges[currentPos][0], sortedRanges[i-1][1]}
-		// 			cleanRanges = append(cleanRanges, newItem)
-		// 			currentPos = i
-		// 		}
-		// 	}
-		// }
 
-		currentPos++
+		// Check if the current next input range is lower than the current highest output
+		currentInputRange := sortedRanges[currentPos][0]
+		currentHighestOutputRange := sortedRanges[currentPos][1]
+
+		for indexY := currentPos + 1; indexY < lenOfSortedRange-1; indexY++ {
+			fmt.Println(indexY, sortedRanges[indexY], currentHighestOutputRange)
+			// currentHighestOutputRange = max(currentHighestOutputRange, sortedRanges[indexY][1])
+			if sortedRanges[indexY+1][0] > currentHighestOutputRange {
+				currentHighestOutputRange = sortedRanges[indexY][1]
+				currentPos = indexY + 1
+				continue
+
+			}
+		}
+
+		// Append
+		cleanRanges = append(cleanRanges, []int{currentInputRange, currentHighestOutputRange})
+
+		fmt.Println("clean ranges:", cleanRanges)
+
 	}
 
-	fmt.Println(cleanRanges)
-
-	return count, nil
+	return 0, nil
 }
