@@ -9,10 +9,15 @@ import (
 	"example.com/utils"
 )
 
-func returnRangesAndIDs(data []string, onlyRanges bool) ([][]int, []int) {
+type minMaxRange struct {
+	min int
+	max int
+}
+
+func returnRangesAndIDs(data []string, onlyRanges bool) ([]minMaxRange, []int) {
 	pastEmptyLine := false
 
-	ranges := make([][]int, 0)
+	ranges := make([]minMaxRange, 0)
 	var ids []int
 
 	for _, line := range data {
@@ -29,7 +34,7 @@ func returnRangesAndIDs(data []string, onlyRanges bool) ([][]int, []int) {
 			rng := strings.Split(line, "-")
 			rngStartInt, _ := strconv.Atoi(rng[0])
 			rngEndInt, _ := strconv.Atoi(rng[1])
-			rngInt := []int{rngStartInt, rngEndInt}
+			rngInt := minMaxRange{rngStartInt, rngEndInt}
 			ranges = append(ranges, rngInt)
 		}
 	}
@@ -46,7 +51,7 @@ func d5p1() (int, error) {
 
 	for _, id := range ids {
 		for _, startEndRange := range ranges {
-			if startEndRange[0] <= id && id <= startEndRange[1] {
+			if startEndRange.min <= id && id <= startEndRange.max {
 				freshItems[id] = true
 			}
 		}
@@ -55,88 +60,75 @@ func d5p1() (int, error) {
 	return len(freshItems), nil
 }
 
+func rangeOverlaps(rangeA minMaxRange, rangeB minMaxRange) (overlaps bool) {
+	return (rangeB.min < rangeA.max && rangeA.min < rangeB.max)
+}
+
+func cleanOverlappingRanges(inputRanges []minMaxRange) (outputRanges []minMaxRange, err error) {
+	// Takes a sorted input slice of minMaxRange{} items, checks for any overlapping min/max ranges in the slice
+	// 	and if there are any overlaps, removes the offending items and returns a clean range instead
+
+	outputRanges = append(outputRanges, inputRanges[0])
+	for i := 1; i <= len(inputRanges)-1; i++ {
+		last := &outputRanges[len(outputRanges)-1]
+		curr := inputRanges[i]
+		if curr.min <= last.max {
+			last.max = max(last.max, curr.max)
+		} else {
+			outputRanges = append(outputRanges, curr)
+		}
+	}
+
+	return outputRanges, err
+}
+
 func d5p2() (int, error) {
-	data, err := utils.AOCFileReadToSlice(true, 5)
+	data, err := utils.AOCFileReadToSlice(false, 5)
 	utils.Check(err)
 
-	// [x] Get ranges
-	// [x] Get a slice of just the input range numbers
-	// [x] Sort input range sort
-	// [x] Create map of input ranges, key being start range and value being output range
-	// [x] Loop through sorted slice to grab k,v from map and export a sorted input/output slice
-	// [x] loop through sorted slice, and given it's output range, see if the next input range is
-	// 			lower than the current output range, if it is, append [$current[input], $next[ouxtput]]
-	// [ ] For each item in the sorted ranges, find out if the output range is bigger than the next input range.
-	// 			If it isn't then output it as is. If it is bigger than the next input range then loop through the
-	// 			future inOutRanges and find the next one that is bigger than the current outRange, then append
-	// 			the current inputRange and the previous future outputRange, then skip to the next inputRange
-
-	// count := 0
-	var inRanges []int
+	count := 0
+	inRanges := []int{}
 	inOutRangesMap := make(map[int]int)
-	sortedRanges := [][]int{}
-	cleanRanges := [][]int{}
+	sortedRanges := []minMaxRange{}
+	cleanRanges := []minMaxRange{}
 
 	ranges, _ := returnRangesAndIDs(data, true)
 
+	// This section of sorting the data by input range can almost CERTAINLY be done in less
+	// 		lines of code, might revisit at some point
+	// Map wih input ranges as key and output ranges as max
 	for _, startEndRange := range ranges {
-		inOutRangesMap[startEndRange[0]] = startEndRange[1]
+		inOutRangesMap[startEndRange.min] = startEndRange.max
 	}
 
+	// Slice of just input ranges
 	for _, startEndRange := range ranges {
-		inRanges = append(inRanges, startEndRange[0])
+		inRanges = append(inRanges, startEndRange.min)
 	}
 
-	sort.Ints(inRanges) // this does it in place?? weird.
+	sort.Ints(inRanges) // sorting happens in place?? weird.
 
+	// Spit out a clean set of ranges based on the sorted input keys
 	for _, item := range inRanges {
-		newItem := []int{item, inOutRangesMap[item]}
-		sortedRanges = append(sortedRanges, newItem)
+		sortedRanges = append(sortedRanges, minMaxRange{item, inOutRangesMap[item]})
 	}
 
-	fmt.Println(inOutRangesMap)
-	fmt.Println("only input ranges:", inRanges)
-	fmt.Println("sorted range slice:", sortedRanges)
+	// fmt.Println(inOutRangesMap)
+	// fmt.Println("only input ranges:", inRanges)
+	// fmt.Println("sorted range slice:", sortedRanges)
 
-	currentPos := 0
-	lenOfSortedRange := len(sortedRanges)
-	for range lenOfSortedRange {
-		// Exit loop cleanly
-		if currentPos >= lenOfSortedRange-1 {
-			return 0, nil
-		}
-
-		fmt.Println(sortedRanges[currentPos])
-
-		// Clean output for current item, no overlapping ranges, append with no changes
-		if sortedRanges[currentPos][1] < sortedRanges[currentPos+1][0] {
-			fmt.Println("clean output, no overlaps:", sortedRanges[currentPos])
-			cleanRanges = append(cleanRanges, []int{sortedRanges[currentPos][0], sortedRanges[currentPos][1]})
-			currentPos++
-			continue
-		}
-
-		// Check if the current next input range is lower than the current highest output
-		currentInputRange := sortedRanges[currentPos][0]
-		currentHighestOutputRange := sortedRanges[currentPos][1]
-
-		for indexY := currentPos + 1; indexY < lenOfSortedRange-1; indexY++ {
-			fmt.Println(indexY, sortedRanges[indexY], currentHighestOutputRange)
-			// currentHighestOutputRange = max(currentHighestOutputRange, sortedRanges[indexY][1])
-			if sortedRanges[indexY+1][0] > currentHighestOutputRange {
-				currentHighestOutputRange = sortedRanges[indexY][1]
-				currentPos = indexY + 1
-				continue
-
-			}
-		}
-
-		// Append
-		cleanRanges = append(cleanRanges, []int{currentInputRange, currentHighestOutputRange})
-
-		fmt.Println("clean ranges:", cleanRanges)
-
+	cleanRanges, err = cleanOverlappingRanges(sortedRanges)
+	utils.Check(err)
+	fmt.Println("clean ranges:", cleanRanges)
+	for _, i := range cleanRanges {
+		fmt.Println(i.max + 1 - i.min)
+		count += (i.max + 1 - i.min)
+		// fmt.Println(i)
 	}
 
-	return 0, nil
+	return count, nil
+}
+
+func main() {
+	fmt.Println(d5p2())
 }
