@@ -3,17 +3,14 @@ package utils
 import (
 	"bufio"
 	"fmt"
-	"math"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
-// Hello returns a greeting for the named person.
-func Hello(name string) string {
-	// Return a greeting that embeds the name in a message.
-	message := fmt.Sprintf("Hi, %v. Welcome!", name)
-	return message
+type MinMaxRange struct {
+	Min int
+	Max int
 }
 
 func Check(e error) {
@@ -73,10 +70,10 @@ func AOCFileReadToSlice(test bool, day int) (output []string, err error) {
 	return data, nil
 }
 
-func IntFloor(number int) int {
-	// Takes an integer, floors it, and returns an int
-	return int(math.Floor(float64(number)))
-}
+// func IntFloor(number int) int {
+// 	// Takes an integer, floors it, and returns an int
+// 	return int(math.Floor(float64(number)))
+// }
 
 func FlattenSlice(inputSlice []string) (outputString string) {
 	// Flattens a slice into a single string
@@ -97,4 +94,27 @@ func BoxFilter(inputSlice []string, xRadius int, yRadius int, x int, y int) []st
 	}
 
 	return outputSlice
+}
+
+func RangeOverlapsSorted(rangeA MinMaxRange, rangeB MinMaxRange) (overlaps bool, err error) {
+	// Takes two given inputs of $minMaxRange, with $rangeB having a higher starting int,
+	// 	checks if they overlap, and returns true if they do overlap, and false if they don't
+	return (rangeB.Min < rangeA.Max && rangeA.Min < rangeB.Max), nil
+}
+
+func CleanOverlappingRanges(inputRanges []MinMaxRange) (outputRanges []MinMaxRange, err error) {
+	// Takes a sorted input slice of minMaxRange{} items, checks for any overlapping min/max ranges in the slice
+	// 	and if there are any overlaps, removes the offending items and returns a clean range instead
+	outputRanges = append(outputRanges, inputRanges[0])
+	for i := 1; i <= len(inputRanges)-1; i++ {
+		last := &outputRanges[len(outputRanges)-1]
+		curr := inputRanges[i]
+		if curr.Min <= last.Max {
+			last.Max = max(last.Max, curr.Max)
+		} else {
+			outputRanges = append(outputRanges, curr)
+		}
+	}
+
+	return outputRanges, err
 }

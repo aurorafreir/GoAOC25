@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"sort"
 	"strconv"
 	"strings"
@@ -9,15 +8,10 @@ import (
 	"example.com/utils"
 )
 
-type minMaxRange struct {
-	min int
-	max int
-}
-
-func returnRangesAndIDs(data []string, onlyRanges bool) ([]minMaxRange, []int) {
+func returnRangesAndIDs(data []string, onlyRanges bool) ([]utils.MinMaxRange, []int) {
 	pastEmptyLine := false
 
-	ranges := make([]minMaxRange, 0)
+	ranges := make([]utils.MinMaxRange, 0)
 	var ids []int
 
 	for _, line := range data {
@@ -34,7 +28,7 @@ func returnRangesAndIDs(data []string, onlyRanges bool) ([]minMaxRange, []int) {
 			rng := strings.Split(line, "-")
 			rngStartInt, _ := strconv.Atoi(rng[0])
 			rngEndInt, _ := strconv.Atoi(rng[1])
-			rngInt := minMaxRange{rngStartInt, rngEndInt}
+			rngInt := utils.MinMaxRange{rngStartInt, rngEndInt}
 			ranges = append(ranges, rngInt)
 		}
 	}
@@ -51,35 +45,13 @@ func d5p1() (int, error) {
 
 	for _, id := range ids {
 		for _, startEndRange := range ranges {
-			if startEndRange.min <= id && id <= startEndRange.max {
+			if startEndRange.Min <= id && id <= startEndRange.Max {
 				freshItems[id] = true
 			}
 		}
 	}
 
 	return len(freshItems), nil
-}
-
-func rangeOverlaps(rangeA minMaxRange, rangeB minMaxRange) (overlaps bool) {
-	return (rangeB.min < rangeA.max && rangeA.min < rangeB.max)
-}
-
-func cleanOverlappingRanges(inputRanges []minMaxRange) (outputRanges []minMaxRange, err error) {
-	// Takes a sorted input slice of minMaxRange{} items, checks for any overlapping min/max ranges in the slice
-	// 	and if there are any overlaps, removes the offending items and returns a clean range instead
-
-	outputRanges = append(outputRanges, inputRanges[0])
-	for i := 1; i <= len(inputRanges)-1; i++ {
-		last := &outputRanges[len(outputRanges)-1]
-		curr := inputRanges[i]
-		if curr.min <= last.max {
-			last.max = max(last.max, curr.max)
-		} else {
-			outputRanges = append(outputRanges, curr)
-		}
-	}
-
-	return outputRanges, err
 }
 
 func d5p2() (int, error) {
@@ -89,8 +61,8 @@ func d5p2() (int, error) {
 	count := 0
 	inRanges := []int{}
 	inOutRangesMap := make(map[int]int)
-	sortedRanges := []minMaxRange{}
-	cleanRanges := []minMaxRange{}
+	sortedRanges := []utils.MinMaxRange{}
+	cleanRanges := []utils.MinMaxRange{}
 
 	ranges, _ := returnRangesAndIDs(data, true)
 
@@ -98,37 +70,31 @@ func d5p2() (int, error) {
 	// 		lines of code, might revisit at some point
 	// Map wih input ranges as key and output ranges as max
 	for _, startEndRange := range ranges {
-		inOutRangesMap[startEndRange.min] = startEndRange.max
+		if _, exists := inOutRangesMap[startEndRange.Min]; exists { // Checks for collisions and sets value to highest Max range
+			inOutRangesMap[startEndRange.Min] = max(startEndRange.Max, inOutRangesMap[startEndRange.Min])
+			continue
+		} else {
+			inOutRangesMap[startEndRange.Min] = startEndRange.Max
+		}
 	}
 
-	// Slice of just input ranges
+	// Slice of just input ranges to be sorted
 	for _, startEndRange := range ranges {
-		inRanges = append(inRanges, startEndRange.min)
+		inRanges = append(inRanges, startEndRange.Min)
 	}
-
 	sort.Ints(inRanges) // sorting happens in place?? weird.
 
 	// Spit out a clean set of ranges based on the sorted input keys
 	for _, item := range inRanges {
-		sortedRanges = append(sortedRanges, minMaxRange{item, inOutRangesMap[item]})
+		sortedRanges = append(sortedRanges, utils.MinMaxRange{item, inOutRangesMap[item]})
 	}
 
-	// fmt.Println(inOutRangesMap)
-	// fmt.Println("only input ranges:", inRanges)
-	// fmt.Println("sorted range slice:", sortedRanges)
+	cleanRanges, _ = utils.CleanOverlappingRanges(sortedRanges)
 
-	cleanRanges, err = cleanOverlappingRanges(sortedRanges)
-	utils.Check(err)
-	fmt.Println("clean ranges:", cleanRanges)
+	// Inclusive range addition
 	for _, i := range cleanRanges {
-		fmt.Println(i.max + 1 - i.min)
-		count += (i.max + 1 - i.min)
-		// fmt.Println(i)
+		count += (i.Max + 1 - i.Min)
 	}
 
 	return count, nil
-}
-
-func main() {
-	fmt.Println(d5p2())
 }
