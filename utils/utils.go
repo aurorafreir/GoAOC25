@@ -2,6 +2,7 @@ package utils
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -117,4 +118,21 @@ func CleanOverlappingRanges(inputRanges []MinMaxRange) (outputRanges []MinMaxRan
 	}
 
 	return outputRanges, err
+}
+
+func SplitStrIntoArbitraryLength(inputStr string, endStringsLength int) (outputStrAsSlice []string, err error) {
+	// Takes an input string $inputStr, and an input int $endStringsLength,
+	// 	and outputs a slice of strings of $endStringsLength each
+	count := 0
+	currentStr := bytes.Buffer{}
+	for i := range len(inputStr) {
+		currentStr.WriteString(inputStr[i : i+1])
+		count++
+		if count == endStringsLength {
+			outputStrAsSlice = append(outputStrAsSlice, currentStr.String())
+			currentStr = bytes.Buffer{}
+			count = 0
+		}
+	}
+	return outputStrAsSlice, nil
 }

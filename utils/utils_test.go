@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -51,13 +52,22 @@ func TestRangeOverlapsSorted(t *testing.T) {
 	}
 }
 
-func TestRangeOverlapsUnSorted(t *testing.T) {
-	rangeA := MinMaxRange{7, 12}
-	rangeB := MinMaxRange{5, 10}
-	want := 
-	outputBool, _ := RangeOverlapsSorted(rangeA, rangeB)
-	if !(want == outputBool) {
-		t.Errorf(`RangeOverlapsSorted = %v, want match for %t`, outputBool, want)
+// func TestRangeOverlapsUnSorted(t *testing.T) {
+// 	rangeA := MinMaxRange{7, 12}
+// 	rangeB := MinMaxRange{5, 10}
+// 	want :=
+// 	outputBool, _ := RangeOverlapsSorted(rangeA, rangeB)
+// 	if !(want == outputBool) {
+// 		t.Errorf(`RangeOverlapsSorted = %v, want match for %t`, outputBool, want)
 
+// 	}
+// }
+
+func TestSplitStrIntoArbitraryLength(t *testing.T) {
+	inputStr := "123123123123"
+	want := []string{"123", "123", "123", "123"}
+	outputSlice, _ := SplitStrIntoArbitraryLength(inputStr, 3)
+	if !reflect.DeepEqual(want, outputSlice) {
+		t.Errorf(`RangeOverlapsSorted = %v, want match for %v`, outputSlice, want)
 	}
 }
