@@ -71,3 +71,12 @@ func TestSplitStrIntoArbitraryLength(t *testing.T) {
 		t.Errorf(`RangeOverlapsSorted = %v, want match for %v`, outputSlice, want)
 	}
 }
+
+func TestSplitStrIntoArbitraryLengthDouble(t *testing.T) {
+	inputStr := "11"
+	want := []string{"1", "1"}
+	outputSlice, _ := SplitStrIntoArbitraryLength(inputStr, 1)
+	if !reflect.DeepEqual(want, outputSlice) {
+		t.Errorf(`RangeOverlapsSorted = %v, want match for %v`, outputSlice, want)
+	}
+}
