@@ -30,17 +30,3 @@ Day 10 0/2
 Day 11 0/2
 
 Day 12 0/2
-
-# What I'm hoping to learn from this
-Unit testing
-
-Structs
-
-Initialized objects
-
-For loops
-
-Pointers
-
-Inline functions
-
