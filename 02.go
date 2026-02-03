@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"slices"
 	"strconv"
 	"strings"
@@ -55,11 +54,10 @@ func d2p2() (output int, err error) {
 	data, err := utils.AOCFileReadToSlice(testing, 2)
 	utils.Check(err)
 
-	// Get just the first line as a string
-	singleString := data[0]
-
+	singleString := data[0]                                 // Get just the first line as a string
 	sliceOfRangeStrings := strings.Split(singleString, ",") // Split single string into each range as a string
 	sliceOfRangeInts := []utils.MinMaxRange{}
+	invalidCount := 0
 
 	for _, item := range sliceOfRangeStrings {
 		// Get each range as a slice of two strings, then convert to ints,
@@ -71,32 +69,19 @@ func d2p2() (output int, err error) {
 		sliceOfRangeInts = append(sliceOfRangeInts, utils.MinMaxRange{rangeMin, rangeMax})
 	}
 
-	invalidCount := 0
-
 	// Find all the invalid items in the ranges
 	for _, ranges := range sliceOfRangeInts {
 		for number := ranges.Min; number <= ranges.Max; number++ {
 			numberAsStr := strconv.Itoa(number)
-			halfLength := len(numberAsStr) / 2
-			cleanMults := []int{}
-			for length := 1; length <= halfLength; length++ {
-				if len(numberAsStr)%length == 0 {
-					cleanMults = append(cleanMults, length)
-				}
-			}
-			if testing {
-				fmt.Println(numberAsStr, "cleanMults", cleanMults)
-			}
 		out:
-			for _, mult := range cleanMults {
-				splitString, _ := utils.SplitStrIntoArbitraryLength(numberAsStr, mult)
-				allTheSame := !slices.ContainsFunc(splitString, func(s string) bool { return s != splitString[0] })
-				if testing {
-					fmt.Println(allTheSame)
-				}
-				if allTheSame {
-					invalidCount += number
-					break out
+			for length := 1; length <= len(numberAsStr)/2; length++ {
+				if len(numberAsStr)%length == 0 {
+					splitString, _ := utils.SplitStrIntoArbitraryLength(numberAsStr, length)
+					allTheSame := !slices.ContainsFunc(splitString, func(s string) bool { return s != splitString[0] })
+					if allTheSame {
+						invalidCount += number
+						break out
+					}
 				}
 			}
 		}
