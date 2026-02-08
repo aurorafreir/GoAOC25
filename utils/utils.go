@@ -134,5 +134,8 @@ func SplitStrIntoArbitraryLength(inputStr string, endStringsLength int) (outputS
 			count = 0
 		}
 	}
+	if !(currentStr.String() == "") {
+		outputStrAsSlice = append(outputStrAsSlice, currentStr.String())
+	}
 	return outputStrAsSlice, nil
 }
