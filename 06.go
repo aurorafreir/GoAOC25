@@ -12,12 +12,12 @@ import (
 func rotateStringSlice90(inputSlice [][]string) (output [][]string, err error) {
 	// Rotates a slice
 	yLen := len(inputSlice)
-	output = make([][]string, len(inputSlice[0])+1)
-	for y := range inputSlice { // Initialize slice of slices
-		output[y] = make([]string, yLen)
+	output = make([][]string, len(inputSlice[0]))
+	for y := range output { // Initialize slice of slices
+		output[y] = make([]string, yLen+1)
 	}
-	for y := range inputSlice {
-		for x := range yLen {
+	for y := range yLen {
+		for x := range len(inputSlice[0]) {
 			output[x][y] = inputSlice[y][x]
 		}
 	}
@@ -25,20 +25,39 @@ func rotateStringSlice90(inputSlice [][]string) (output [][]string, err error) {
 }
 
 func d6p1() (out int, err error) {
-	testing := true
-	data, err := utils.AOCFileReadToSlice(false, 6)
+	testing := false
+	data, err := utils.AOCFileReadToSlice(testing, 6)
 	utils.Check(err)
 
-	sliceOfItems := [][]string{}
+	nonSpaceIndexes := make([]bool, len(data[0]))
 	for _, line := range data {
-		sliceOfLine, _ := utils.SplitStrIntoArbitraryLength(line, 4)
-		sliceOfItems = append(sliceOfItems, sliceOfLine)
+		for index, char := range line {
+			if !(string(char) == " ") {
+				nonSpaceIndexes[index] = true
+			}
+		}
+	}
+
+	cleanSliceOfSlices := [][]string{}
+	for _, line := range data {
+		cleanSlice := []string{}
+		prevIndex := 0
+		for index := range line {
+			if !nonSpaceIndexes[index] {
+				cleanSlice = append(cleanSlice, line[prevIndex:index])
+				prevIndex = index
+			}
+			if index == len(line)-1 {
+				cleanSlice = append(cleanSlice, line[prevIndex:index+1])
+			}
+		}
+		cleanSliceOfSlices = append(cleanSliceOfSlices, cleanSlice)
 	}
 
 	if testing {
-		fmt.Println("sliceOfItems:", sliceOfItems)
+		fmt.Println("sliceOfItems:", cleanSliceOfSlices)
 	}
-	rotatedSliceOfItems, _ := rotateStringSlice90(sliceOfItems)
+	rotatedSliceOfItems, _ := rotateStringSlice90(cleanSliceOfSlices)
 	if testing {
 		fmt.Println("rotatedSliceOfItems:", rotatedSliceOfItems)
 	}
