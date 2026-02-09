@@ -62,7 +62,6 @@ func d6p1() (out int, err error) {
 		fmt.Println("rotatedSliceOfItems:", rotatedSliceOfItems)
 	}
 
-	total := 0
 	for _, set := range rotatedSliceOfItems {
 		numbers := set[0 : len(set)-2]
 		sign := strings.ReplaceAll(set[len(set)-2], " ", "") // sign, removed whitespace
@@ -76,10 +75,10 @@ func d6p1() (out int, err error) {
 				setOutput = setOutput + numberInt
 			}
 		}
-		total += setOutput
+		out += setOutput
 	}
 
-	return total, nil
+	return out, nil
 }
 
 func main() {
