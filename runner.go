@@ -73,5 +73,18 @@ func main() {
 	fmt.Println("D5p2 result:", d5p2)
 	fmt.Println("D5p2 took:", time.Since(funcTimeStart).Microseconds(), "microseconds")
 
-	fmt.Println("All completed AOC 2025 challenges finished in", time.Since(mainTimeStart).Microseconds(), "microseconds /", time.Since(mainTimeStart).Seconds(), "seconds")
+	// Day 06
+	funcTimeStart = time.Now()
+	d6p1, err := d6p1()
+	utils.Check(err)
+	fmt.Println("D6p1 result:", d6p1)
+	fmt.Println("D6p1 took:", time.Since(funcTimeStart).Microseconds(), "microseconds")
+
+	funcTimeStart = time.Now()
+	d6p2, err := d6p2()
+	utils.Check(err)
+	fmt.Println("D6p2 result:", d6p2)
+	fmt.Println("D6p2 took:", time.Since(funcTimeStart).Microseconds(), "microseconds")
+
+	fmt.Println("All completed AOC 2025 challenges finished in", time.Since(mainTimeStart).Seconds(), "seconds /", time.Since(mainTimeStart).Microseconds(), "microseconds")
 }
