@@ -17,7 +17,7 @@ Day 4 2/2 :star:
 
 Day 5 2/2 :star:
 
-Day 6 0/2
+Day 6 2/2 :star:
 
 Day 7 0/2
 
