@@ -87,11 +87,6 @@ func AOCFileReadToSlice(test bool, day int) (output []string, err error) {
 	return data, nil
 }
 
-// func IntFloor(number int) int {
-// 	// Takes an integer, floors it, and returns an int
-// 	return int(math.Floor(float64(number)))
-// }
-
 func FlattenSlice(inputSlice []string) (outputString string) {
 	// Flattens a slice into a single string
 	outputString = strings.Join(inputSlice, "")
