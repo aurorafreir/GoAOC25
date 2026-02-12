@@ -38,6 +38,15 @@ func AbsDiffInt(x, y int) int {
 	return x - y
 }
 
+func CountAll(inputSlice []bool) (outputCount int, err error) {
+	for _, item := range inputSlice {
+		if item == true {
+			outputCount++
+		}
+	}
+	return outputCount, nil
+}
+
 func ReadLines(path string) ([]string, error) {
 	// Reads the lines of a file as individual items in a slice and
 	// returns them, then closes the file.
