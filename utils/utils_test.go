@@ -80,3 +80,23 @@ func TestSplitStrIntoArbitraryLengthDouble(t *testing.T) {
 		t.Errorf(`RangeOverlapsSorted = %v, want match for %v`, outputSlice, want)
 	}
 }
+
+func TestEuclidianDistanceStraightZ(t *testing.T) {
+	inputA := XYZ{0, 0, 5}
+	inputB := XYZ{0, 0, 0}
+	want := 5.0
+	outputDist, _ := XYZEuclidianDistance(inputA, inputB)
+	if !(want == outputDist) {
+		t.Errorf(`XYZEuclidianDistance = %v, want match for %v`, outputDist, want)
+	}
+}
+
+func TestEuclidianDistance(t *testing.T) {
+	inputA := XYZ{5, 5, 5}
+	inputB := XYZ{0, 0, 0}
+	want := 8.66025
+	outputDist, _ := XYZEuclidianDistance(inputA, inputB)
+	if !(want == outputDist) {
+		t.Errorf(`XYZEuclidianDistance = %v, want match for %v`, outputDist, want)
+	}
+}

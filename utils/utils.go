@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"math"
 	"os"
 	"path/filepath"
 	"strings"
@@ -12,6 +13,12 @@ import (
 type MinMaxRange struct {
 	Min int
 	Max int
+}
+
+type XYZ struct {
+	X int
+	Y int
+	Z int
 }
 
 func Check(e error) {
@@ -138,4 +145,13 @@ func SplitStrIntoArbitraryLength(inputStr string, endStringsLength int) (outputS
 		outputStrAsSlice = append(outputStrAsSlice, currentStr.String())
 	}
 	return outputStrAsSlice, nil
+}
+
+// Takes two inputs of type XYZ, and returns the distance between them
+func XYZEuclidianDistance(inputA XYZ, inputB XYZ) (distance float64, err error) {
+	xDist := math.Pow(float64(inputA.X-inputB.X), 2)
+	yDist := math.Pow(float64(inputA.Y-inputB.Y), 2)
+	zDist := math.Pow(float64(inputA.Z-inputB.Z), 2)
+	distance = math.Sqrt(xDist + yDist + zDist)
+	return distance, nil
 }
