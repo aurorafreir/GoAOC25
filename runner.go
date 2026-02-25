@@ -7,7 +7,7 @@ import (
 	"example.com/utils"
 )
 
-func main() {
+func mains() {
 	mainTimeStart := time.Now()
 
 	// Day 01
@@ -85,6 +85,32 @@ func main() {
 	utils.Check(err)
 	fmt.Println("D6p2 result:", d6p2)
 	fmt.Println("D6p2 took:", time.Since(funcTimeStart).Microseconds(), "microseconds")
+
+	// Day 07
+	funcTimeStart = time.Now()
+	d7p1, err := d7p1()
+	utils.Check(err)
+	fmt.Println("D7p1 result:", d7p1)
+	fmt.Println("D7p1 took:", time.Since(funcTimeStart).Microseconds(), "microseconds")
+
+	// funcTimeStart = time.Now()
+	// d7p2, err := d7p2()
+	// utils.Check(err)
+	// fmt.Println("D7p2 result:", d7p2)
+	// fmt.Println("D7p2 took:", time.Since(funcTimeStart).Microseconds(), "microseconds")
+
+	// Day 08
+	funcTimeStart = time.Now()
+	d8p1, err := d8p1()
+	utils.Check(err)
+	fmt.Println("D8p1 result:", d8p1)
+	fmt.Println("D8p1 took:", time.Since(funcTimeStart).Microseconds(), "microseconds")
+
+	// funcTimeStart = time.Now()
+	// d8p2, err := d8p2()
+	// utils.Check(err)
+	// fmt.Println("D8p2 result:", d8p2)
+	// fmt.Println("D8p2 took:", time.Since(funcTimeStart).Microseconds(), "microseconds")
 
 	fmt.Println("All completed AOC 2025 challenges finished in", time.Since(mainTimeStart).Seconds(), "seconds /", time.Since(mainTimeStart).Microseconds(), "microseconds")
 }
